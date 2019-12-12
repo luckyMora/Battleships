@@ -34,6 +34,9 @@ public class GamePlayer {
         this.player = player;
         this.game = game;
     }
+    public GamePlayer(Player player) {
+        this.player = player;
+    }
 
     public long getGamePlayerId() {
         return GamePlayerId;

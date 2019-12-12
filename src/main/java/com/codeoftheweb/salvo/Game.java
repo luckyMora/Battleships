@@ -30,6 +30,18 @@ public class Game {
         this.date = date;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+
     public long getGameId(){
         return gameId;
     }
@@ -43,6 +55,11 @@ public class Game {
 
     public void setGameName(String gameName) {
         this.gameName = gameName;
+    }
+
+    public void addgamePLayer(GamePlayer gameplayer){
+        this.gamePlayers.add(gameplayer);
+        gameplayer.setGame(this);
     }
 
 }
