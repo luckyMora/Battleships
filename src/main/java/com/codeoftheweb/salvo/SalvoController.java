@@ -2,6 +2,7 @@ package com.codeoftheweb.salvo;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,13 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
+@RequestMapping("/api")
 public class SalvoController {
     @Autowired
     private GameRepository repo;
 
-    @RequestMapping("/api/games")
+    @RequestMapping("/games")
     public List<Object> getAll() {
         List<Object> gamesIdList = new ArrayList<>();
 
@@ -27,8 +29,7 @@ public class SalvoController {
                 System.out.println(game.getGameId());
                 gamesIdList.add(gameIds);
 
-        }
-        );
+        });
 
         return gamesIdList;
     }
