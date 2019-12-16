@@ -1,14 +1,23 @@
-async function getData() {
+ function getData() {
     //await the response of the fetch call
     console.log("here")
-    let response = await fetch('http://localhost:8080/api/games');
-    console.log(response);
-    //proceed once the first promise is resolved.
-    let data = await response.json()
-    //proceed only when the second promise is resolved
-    controller(data)
-    console.log("IN GET DATA")
-    //return data;
+    fetch('http://localhost:8080/api/games')
+    .then(response => response.json())
+    .then(response => {
+        console.log(response);
+        //proceed once the first promise is resolved.
+        let data = response
+        //proceed only when the second promise is resolved
+        // controller(data)
+        console.log("IN GET DATA")
+        //return data;
+
+
+
+
+
+    })
+
 }
 //call getData function
 // getData()
@@ -24,12 +33,12 @@ async function controller(data) {
 getData()
 console.log("here") 
 
-let gamesInfoList = document.getElementsId("GamesList")
+let gamesInfoList = document.getElementById("GamesList") 
 
-function createList(){
-    if(data.lenght > 0)
+/* function createList(){
     for(let i = 0 ; i > data.lenght; i++){
         let myGamesList = createElement("ol")
+        
 
     }
-}
+} */

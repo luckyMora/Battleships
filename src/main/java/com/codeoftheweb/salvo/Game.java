@@ -22,7 +22,7 @@ public class Game {
     Date date;
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    Set<GamePlayer> gamePlayer;
 
     public Game (){ }
     public Game(String gName, Date date) {
@@ -34,12 +34,12 @@ public class Game {
         return date;
     }
 
-    public Set<GamePlayer> getGamePlayers() {
-        return gamePlayers;
+    public Set<GamePlayer> getGamePlayer() {
+        return gamePlayer;
     }
 
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
+    public void setGamePlayer(Set<GamePlayer> gamePlayer) {
+        this.gamePlayer = gamePlayer;
     }
 
     public long getGameId(){
@@ -57,9 +57,9 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public void addgamePLayer(GamePlayer gameplayer){
-        this.gamePlayers.add(gameplayer);
-        gameplayer.setGame(this);
-    }
+//    public void addgamePLayer(GamePlayer gameplayer){
+//        gameplayer.setGame(this);
+//        this.gamePlayers.add(gameplayer);
+//    }
 
 }

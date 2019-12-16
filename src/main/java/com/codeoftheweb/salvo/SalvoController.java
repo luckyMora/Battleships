@@ -36,10 +36,11 @@ public class SalvoController {
 
     public List<Object> getgameplayersinfo(Game game) {
         List<Object> gameplayersIdList = new ArrayList<>();
-        game.gamePlayers.forEach( g -> {
+        game.gamePlayer.forEach( g -> {
                     Map<String, Object> gameplayersIds = new HashMap<>();
                     gameplayersIds.put("Gameplayer Id",g.getGamePlayerId() );
-                    gameplayersIds.put("Player", g.getPlayer());
+                    gameplayersIds.put("Player", getPlayersInfo(g.getPlayer()));
+                    gameplayersIds.put("Ships", getShipsInfo(g));
                     gameplayersIdList.add(gameplayersIds);
 
                 }
@@ -47,5 +48,31 @@ public class SalvoController {
         return gameplayersIdList;
     }
 
+    public List<Object> getPlayersInfo(Player player) {
+        List<Object> playersInfoList = new ArrayList<>();
+        Map<String, Object> playersInfo = new HashMap<>();
+        playersInfo.put("PlayerID", player.getId());
+        playersInfo.put("PlayerFirstName", player.getFirstName() );
+        playersInfo.put("PlayerLastName", player.getLastName());
+        playersInfo.put("PlayerEmail", player.getEmail());
+        playersInfoList.add(playersInfo);
+        return playersInfoList;
+    }
+
+    public List<Object> getShipsInfo(GamePlayer g) {
+        List<Object> ShipsInfoList = new ArrayList<>();
+        System.out.println(g.getShip());
+        g.getShip().forEach( ga -> {
+            System.out.println(ga);
+           Map<String, Object> ShipsInfo = new HashMap<>();
+           ShipsInfo.put("ShipID", ga.getShipID());
+            ShipsInfo.put("ShipLocation", ga.getLocations());
+            ShipsInfoList.add(ShipsInfo);
+
+
+        });
+
+        return ShipsInfoList;
+    }
 }
 
