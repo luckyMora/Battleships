@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/api")
@@ -19,34 +17,42 @@ public class SalvoController {
 
     @RequestMapping("/games")
     public List<Object> getAll() {
-        List<Object> gamesIdList = new ArrayList<>();
+        List<Object> gamesInfoList = new ArrayList<>();
 
         repo.findAll().forEach(game -> {
-            Map<String, Object> gameIds = new HashMap<>();
-            gameIds.put("created",game.getDate().toString());
-                gameIds.put("Id",game.getGameId());
-                gameIds.put("Gameplayers", getgameplayersinfo(game));
+            Map<String, Object> gameInfo = new HashMap<>();
+            gameInfo.put("created",game.getDate().toString());
+                gameInfo.put("Id",game.getGameId());
+                gameInfo.put("Gameplayers", getgameplayersinfo(game));
                 System.out.println(game.getGameId());
-                gamesIdList.add(gameIds);
+                gamesInfoList.add(gameInfo);
 
         });
 
-        return gamesIdList;
+        return gamesInfoList;
     }
 
+
+
+
+
+
     public List<Object> getgameplayersinfo(Game game) {
-        List<Object> gameplayersIdList = new ArrayList<>();
+        List<Object> gameplayersInfoList = new ArrayList<>();
         game.gamePlayer.forEach( g -> {
-                    Map<String, Object> gameplayersIds = new HashMap<>();
-                    gameplayersIds.put("Gameplayer Id",g.getGamePlayerId() );
-                    gameplayersIds.put("Player", getPlayersInfo(g.getPlayer()));
-                    gameplayersIds.put("Ships", getShipsInfo(g));
-                    gameplayersIdList.add(gameplayersIds);
+                    Map<String, Object> gameplayersInfos = new HashMap<>();
+                    gameplayersInfos.put("Gameplayer Id",g.getGamePlayerId() );
+                    gameplayersInfos.put("Player", getPlayersInfo(g.getPlayer()));
+                    gameplayersInfos.put("Ships", getShipsInfo(g));
+                    gameplayersInfos.put("Salvos", getSalvosInfo(g));
+                    gameplayersInfoList.add(gameplayersInfos);
 
                 }
                 );
-        return gameplayersIdList;
+        return gameplayersInfoList;
     }
+
+
 
     public List<Object> getPlayersInfo(Player player) {
         List<Object> playersInfoList = new ArrayList<>();
@@ -55,24 +61,56 @@ public class SalvoController {
         playersInfo.put("PlayerFirstName", player.getFirstName() );
         playersInfo.put("PlayerLastName", player.getLastName());
         playersInfo.put("PlayerEmail", player.getEmail());
+        playersInfo.put("Score", getScoreInfo(player));
         playersInfoList.add(playersInfo);
         return playersInfoList;
     }
 
+
+
+    public List<Object> getScoreInfo(Player player) {
+        List<Object> ScoreInfoList = new ArrayList<>();
+        player.getScores().stream().forEach( sc -> {
+            Map<String, Object> scoreInfo = new HashMap<>();
+            scoreInfo.put("ScoreID", sc.getScoreID());
+            scoreInfo.put("ActualScore", sc.getActualscore());
+            ScoreInfoList.add(scoreInfo);
+
+        });
+
+        return ScoreInfoList;
+    }
+
+
+
+
+
     public List<Object> getShipsInfo(GamePlayer g) {
         List<Object> ShipsInfoList = new ArrayList<>();
         System.out.println(g.getShip());
-        g.getShip().forEach( ga -> {
-            System.out.println(ga);
+        g.getShip().forEach( shi -> {
+            System.out.println(shi);
            Map<String, Object> ShipsInfo = new HashMap<>();
-           ShipsInfo.put("ShipID", ga.getShipID());
-            ShipsInfo.put("ShipLocation", ga.getLocations());
+           ShipsInfo.put("ShipID", shi.getShipID());
+            ShipsInfo.put("ShipLocation", shi.getLocations());
             ShipsInfoList.add(ShipsInfo);
 
 
         });
 
         return ShipsInfoList;
+    }
+
+    public List<Object> getSalvosInfo(GamePlayer g) {
+        List<Object> SalvoInfoList = new ArrayList<>();
+        g.getSalvos().forEach( sa ->{
+            Map<String, Object> SalvoInfo = new HashMap<>();
+            SalvoInfo.put("SalvoID", sa.getSalvoID());
+            SalvoInfo.put("SalvoTurnNumber", sa.getTurnNumber());
+            SalvoInfo.put("SalvoLocation", sa.getSalvolocations());
+            SalvoInfoList.add(SalvoInfo);
+        });
+        return SalvoInfoList;
     }
 }
 

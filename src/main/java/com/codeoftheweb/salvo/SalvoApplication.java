@@ -16,14 +16,14 @@ public class SalvoApplication {
 		SpringApplication.run(SalvoApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner initData(PlayerRepository repository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository) {
+	public CommandLineRunner initData(PlayerRepository repository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 
 
-			// PLayers
+			// Players
 			Player p1 = new Player("jackyB","jacky@kek.com", "Jack", "Bauer");
 			repository.save(p1);
-			Player p2 =  new Player("chloeO","chloe@na.com","Chloe", "O'Brian");
+			Player p2 = new Player("chloeO","chloe@na.com","Chloe", "O'Brian");
 			repository.save(p2);
 			Player p3 = new Player("kimB", "kim@was.com", "Kim", "Bauer");
 			repository.save(p3);
@@ -52,6 +52,37 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp3);
 			GamePlayer gp4 = new GamePlayer( p4, g2);
 			gamePlayerRepository.save(gp4);
+
+
+			//Salvos
+			Salvo Sa1 = new Salvo(1,"H1");
+			gp1.addSalvo(Sa1);
+			salvoRepository.save(Sa1);
+			Salvo Sa2 = new Salvo(2,"G1");
+			gp1.addSalvo(Sa2);
+			salvoRepository.save(Sa2);
+			Salvo Sa3 = new Salvo(3,"H3");
+			gp1.addSalvo(Sa3);
+			salvoRepository.save(Sa3);
+			Salvo Sa4 = new Salvo(4,"H5");
+			gp1.addSalvo(Sa4);
+			salvoRepository.save(Sa4);
+			Salvo Sa5 = new Salvo(1,"A1");
+			gp2.addSalvo(Sa5);
+			salvoRepository.save(Sa5);
+			Salvo Sa6 = new Salvo(2,"B6");
+			gp2.addSalvo(Sa6);
+			salvoRepository.save(Sa6);
+			Salvo Sa7 = new Salvo(3,"C7");
+			gp2.addSalvo(Sa7);
+			salvoRepository.save(Sa7);
+			Salvo Sa8 = new Salvo(4,"H8");
+			gp2.addSalvo(Sa8);
+			salvoRepository.save(Sa8);
+
+
+
+
 
 
 			//Ship Laocations List
@@ -91,12 +122,24 @@ public class SalvoApplication {
 			gp2.addShip(sh8);
 			shipRepository.save(sh8);
 
+			// Score
+			Score Sco1 = new Score(1, g1, p1);
+			scoreRepository.save(Sco1);
+			Score Sco2 = new Score(1, g2, p2);
+			scoreRepository.save(Sco2);
 
-			//saving the Gameplayer
+
+			//saving the Gameplayers
 			gamePlayerRepository.save(gp1);
 			gamePlayerRepository.save(gp2);
 			gamePlayerRepository.save(gp3);
 			gamePlayerRepository.save(gp4);
+
+
+			//Saving PLayers
+			repository.save(p1);
+			repository.save(p2);
+
 
 			//saving the games
 			gameRepository.save(g1);
