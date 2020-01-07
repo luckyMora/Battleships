@@ -3,6 +3,7 @@ package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,9 @@ import java.util.*;
 public class SalvoController {
     @Autowired
     private GameRepository repo;
+
+    @Autowired
+    private GamePlayerRepository repoGP;
 
     @RequestMapping("/games")
     public List<Object> getAll() {
@@ -112,5 +116,36 @@ public class SalvoController {
         });
         return SalvoInfoList;
     }
+
+
+    @RequestMapping("/game_view/{gamePlayerID}")
+    public List<Object> gameview(@PathVariable long gamePlayerID) {
+        List<Object> gamesviewList = new ArrayList<>();
+
+        repoGP.findAll().forEach(gameplayer -> {
+            Map<String, Object> gameplayerInfos = new HashMap<>();
+            gameplayerInfos.put("User", gameplayer.getPlayer().getUserName());
+            gameplayerInfos.put("Ships", getShipsInfo(gameplayer));
+            gameplayerInfos.put("Salvos", getSalvosInfo(gameplayer));
+            gameplayerInfos.put("Enemy", getEnemyInfo(gameplayer));
+            gamesviewList.add(gameplayerInfos);
+        });
+        return gamesviewList;
+
+    }
+
+    public List<Object> getEnemyInfo( GamePlayer gamePlayer){
+        List<Object> EnemyInfosList = new ArrayList<>();
+        gamePlayer.getGame().getGamePlayer().stream().forEach(gPlayer ->{
+            if(gPlayer != gamePlayer ){
+                Map<String, Object> EnemyInfo = new HashMap<>();
+                EnemyInfo.put("Enemy_User_Name", gPlayer.getPlayer().getUserName());
+                EnemyInfo.put("Enemy_Salvos", getSalvosInfo(gPlayer));
+                EnemyInfosList.add((EnemyInfo));
+            }
+        });
+        return  EnemyInfosList;
+    }
+
 }
 
