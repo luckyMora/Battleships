@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Salvo!</title>
 </head>
 <body>
   
 <body>
+<nav ></nav>
+<div class="container">
 <h1>Battle Ships</h1>
-<h3>Game</h3>
 
-<div id="player1">(You)</div>
-
-<h4>VS</h4>
-
-<div id="player2"></div>
-
+<div class="scorebord">
+    <div id="player1">(You)</div><h4>VS</h4><div id="player2">(Enemy)</div>
+    <div id="roundcounter">Round</div>
+</div>
 
 <table id="mytable">
     <tr>
@@ -51,6 +51,8 @@
         <td id="J0"></td><td id="J1"></td><td id="J2"></td><td id="J3"></td><td id="J4"></td><td id="J5"></td><td id="J6"></td><td id="J7"></td><td id="J8"></td><td id="J9"></td>
     </tr>
 </table>
+
+<p> </p>
 
 <table id="enemytable">
     <tr>
@@ -90,6 +92,6 @@
 
 
 <script src="./games.js"></script>
-
+</div>
 </body>
 </html>

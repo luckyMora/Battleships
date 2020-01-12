@@ -26,7 +26,7 @@ public class SalvoController {
         repo.findAll().forEach(game -> {
             Map<String, Object> gameInfo = new HashMap<>();
             gameInfo.put("created",game.getDate().toString());
-                gameInfo.put("Id",game.getGameId());
+                gameInfo.put("Game_Id",game.getGameId());
                 gameInfo.put("Gameplayers", getgameplayersinfo(game));
                 System.out.println(game.getGameId());
                 gamesInfoList.add(gameInfo);
@@ -91,9 +91,7 @@ public class SalvoController {
 
     public List<Object> getShipsInfo(GamePlayer g) {
         List<Object> ShipsInfoList = new ArrayList<>();
-        System.out.println(g.getShip());
         g.getShip().forEach( shi -> {
-            System.out.println(shi);
            Map<String, Object> ShipsInfo = new HashMap<>();
            ShipsInfo.put("ShipID", shi.getShipID());
             ShipsInfo.put("ShipLocation", shi.getLocations());
@@ -121,15 +119,16 @@ public class SalvoController {
     @RequestMapping("/game_view/{gamePlayerID}")
     public List<Object> gameview(@PathVariable long gamePlayerID) {
         List<Object> gamesviewList = new ArrayList<>();
+        GamePlayer currentGP = repoGP.findByGamePlayerId(gamePlayerID);
 
-        repoGP.findAll().forEach(gameplayer -> {
-            Map<String, Object> gameplayerInfos = new HashMap<>();
-            gameplayerInfos.put("User", gameplayer.getPlayer().getUserName());
-            gameplayerInfos.put("Ships", getShipsInfo(gameplayer));
-            gameplayerInfos.put("Salvos", getSalvosInfo(gameplayer));
-            gameplayerInfos.put("Enemy", getEnemyInfo(gameplayer));
-            gamesviewList.add(gameplayerInfos);
-        });
+//      System.out.println(currentGP.getPlayer().getEmail());
+        Map<String, Object> gameplayerInfos = new HashMap<>();
+        gameplayerInfos.put("User", currentGP.getPlayer().getUserName());
+        gameplayerInfos.put("Ships", getShipsInfo(currentGP));
+        gameplayerInfos.put("Salvos", getSalvosInfo(currentGP));
+        gameplayerInfos.put("Enemy", getEnemyInfo(currentGP));
+        gamesviewList.add(gameplayerInfos);
+        ;
         return gamesviewList;
 
     }

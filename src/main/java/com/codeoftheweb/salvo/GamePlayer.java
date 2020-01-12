@@ -15,7 +15,7 @@ public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long GamePlayerId;
+    private long gamePlayerId;
     Date dates;
 
 
@@ -35,20 +35,22 @@ public class GamePlayer {
     private Game game;
 
     public GamePlayer (){ }
+
     public GamePlayer(Player player, Game game) {
         this.player = player;
         this.game = game;
     }
+
     public GamePlayer(Player player) {
         this.player = player;
     }
 
     public long getGamePlayerId() {
-        return GamePlayerId;
+        return gamePlayerId;
     }
 
     public void setGamePlayerId(long gamePlayerId) {
-        GamePlayerId = gamePlayerId;
+        gamePlayerId = gamePlayerId;
     }
 
     public Date getDates() {
@@ -90,6 +92,10 @@ public class GamePlayer {
     public void addShip(Ship ship){
         ship.setGamePlayer(this);
         ships.add(ship);
+    }
+
+    public Set<Ship> getShips() {
+        return ships;
     }
 
     public void addSalvo(Salvo salvo){

@@ -1,0 +1,33 @@
+body {
+    background-color: cornflowerblue;
+}
+.container  {
+    
+    display: grid ;
+    grid-template-columns: 5% 40% 10% 40% 5%;
+    grid-template-rows:  5% 5% 10% 60% auto;
+}
+
+table, tr, td {
+    border: 1px solid crimson;
+}
+
+table{
+    border-collapse: collapse;
+    width: 300px;
+    height: 300px;
+}
+
+nav{
+    grid-area: navbar;
+}
+
+h1 {
+    grid-area: title;
+}
+
+
+
+
+
+
