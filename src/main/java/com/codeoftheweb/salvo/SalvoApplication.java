@@ -122,11 +122,15 @@ public class SalvoApplication {
 			gp2.addShip(sh8);
 			shipRepository.save(sh8);
 
-			// Score
+			// Scores
 			Score Sco1 = new Score(1, g1, p1);
 			scoreRepository.save(Sco1);
-			Score Sco2 = new Score(1, g2, p2);
+			Score Sco2 = new Score(1, g1, p2);
 			scoreRepository.save(Sco2);
+			Score Sco3 = new Score(0, g2, p3);
+			scoreRepository.save(Sco3);
+			Score Sco4 = new Score(2, g2, p4);
+			scoreRepository.save(Sco4);
 
 
 			//saving the Gameplayers

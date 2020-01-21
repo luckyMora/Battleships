@@ -19,6 +19,9 @@ public class SalvoController {
     @Autowired
     private GamePlayerRepository repoGP;
 
+    @Autowired
+    private PlayerRepository repoP;
+
     @RequestMapping("/games")
     public List<Object> getAll() {
         List<Object> gamesInfoList = new ArrayList<>();
@@ -123,6 +126,7 @@ public class SalvoController {
 
 //      System.out.println(currentGP.getPlayer().getEmail());
         Map<String, Object> gameplayerInfos = new HashMap<>();
+        gameplayerInfos.put("GamplayerID",currentGP.getGamePlayerId());
         gameplayerInfos.put("User", currentGP.getPlayer().getUserName());
         gameplayerInfos.put("Ships", getShipsInfo(currentGP));
         gameplayerInfos.put("Salvos", getSalvosInfo(currentGP));
@@ -145,6 +149,16 @@ public class SalvoController {
         });
         return  EnemyInfosList;
     }
+//    @RequestMapping("/ranking")
+//    public List<Object> ranking() {
+//        repoP.findAll().forEach(player -> {
+//            Map<String, Object> rankingInfo = new HashMap<>();
+//            rankingInfo.put("Player", player.getUserName());
+//            rankingInfo.put("
+//        });
+//        return rankingInfo;
+//    }
+
 
 }
 
