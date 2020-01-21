@@ -119,6 +119,37 @@ public class SalvoController {
     }
 
 
+
+    public List<Object> allScoresInfo(Player player){
+        List<Object> allscoreList = new ArrayList<>();
+        player.getScores().forEach(score -> {
+            Map<String, Object> ScoresInfo = new HashMap<>();
+            if (score.getActualscore() == 2) {
+                ScoresInfo.put("Wins", score.getActualscore());
+            }if (score.getActualscore() == 1){
+                ScoresInfo.put("Ties", score.getActualscore());
+            }else ScoresInfo.put("Loses", score.getActualscore());
+            allscoreList.add(ScoresInfo);
+        });
+        return allscoreList;
+    }
+
+    public Object totalscoreInfo(Player player) {
+        Map<String,Object> totalscoreInfoList = new HashMap<>();
+        Set<Score> scores = player.getScores();
+        long totalscore = 0;
+        for(Score sco: scores ){
+            totalscore += sco.getActualscore();
+            totalscoreInfoList.put("totalscore", totalscore);
+
+        };
+        return totalscoreInfoList;
+    }
+
+
+
+
+
     @RequestMapping("/game_view/{gamePlayerID}")
     public List<Object> gameview(@PathVariable long gamePlayerID) {
         List<Object> gamesviewList = new ArrayList<>();
@@ -149,15 +180,18 @@ public class SalvoController {
         });
         return  EnemyInfosList;
     }
-//    @RequestMapping("/ranking")
-//    public List<Object> ranking() {
-//        repoP.findAll().forEach(player -> {
-//            Map<String, Object> rankingInfo = new HashMap<>();
-//            rankingInfo.put("Player", player.getUserName());
-//            rankingInfo.put("
-//        });
-//        return rankingInfo;
-//    }
+    @RequestMapping("/ranking")
+    public List<Object> ranking() {
+        List<Object> rankingInfosList = new ArrayList<>();
+        repoP.findAll().forEach(player -> {
+            Map<String, Object> rankingInfo = new HashMap<>();
+            rankingInfo.put("Player", player.getUserName());
+            rankingInfo.put("Scores", allScoresInfo(player));
+            rankingInfo.put("Totalscore", totalscoreInfo(player));
+            rankingInfosList.add(rankingInfo);
+        });
+        return rankingInfosList;
+    }
 
 
 }

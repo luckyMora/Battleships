@@ -1,7 +1,10 @@
- function getData() {
+
+ 
+ 
+ function getallData() {
     //await the response of the fetch call
     console.log("here")
-    fetch('http://localhost:8080/api/games')
+    fetch('http://localhost:8080/api/game_view/')
     .then(response => response.json())
     .then(response => {
         console.log(response);
@@ -11,6 +14,7 @@
         // controller(data)
         console.log("IN GET DATA")
         //return data;
+        data 
 
 
 
@@ -30,7 +34,7 @@ async function controller(data) {
     console.log("halo" + data)
     
 }
-getData()
+getallData()
 console.log("here") 
 
 let gamesInfoList = document.getElementById("GamesList") 
@@ -42,3 +46,4 @@ let gamesInfoList = document.getElementById("GamesList")
 
     }
 } */
+
