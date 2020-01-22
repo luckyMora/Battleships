@@ -122,22 +122,38 @@ public class SalvoController {
 
     public List<Object> allScoresInfo(Player player){
         List<Object> allscoreList = new ArrayList<>();
+        List<Integer> winList = new ArrayList<>();
+        List<Integer> tieList = new ArrayList<>();
+        List<Integer> loseList = new ArrayList<>();
+//        long[] winsList = new long[0];
+//        long[] tiesList = new long[0];
+//        long[] losesList = new long[0];
+        System.out.println(player.getFirstName());
         player.getScores().forEach(score -> {
             Map<String, Object> ScoresInfo = new HashMap<>();
+
             if (score.getActualscore() == 2) {
-                ScoresInfo.put("Wins", score.getActualscore());
-            }if (score.getActualscore() == 1){
-                ScoresInfo.put("Ties", score.getActualscore());
-            }else ScoresInfo.put("Loses", score.getActualscore());
+                winList.add(score.getActualscore());
+            }else if (score.getActualscore() == 1){
+                tieList.add(score.getActualscore());
+            }else {
+                loseList.add(score.getActualscore());
+            }
+            ScoresInfo.put("Loses", loseList.size());
+            ScoresInfo.put("Ties", tieList.size());
+            ScoresInfo.put("Wins", winList.size());
+
             allscoreList.add(ScoresInfo);
         });
+        System.out.println(winList);
+        System.out.println(loseList);
         return allscoreList;
     }
 
     public Object totalscoreInfo(Player player) {
         Map<String,Object> totalscoreInfoList = new HashMap<>();
         Set<Score> scores = player.getScores();
-        long totalscore = 0;
+        int totalscore = 0;
         for(Score sco: scores ){
             totalscore += sco.getActualscore();
             totalscoreInfoList.put("totalscore", totalscore);
