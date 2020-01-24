@@ -1,9 +1,21 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -15,23 +27,31 @@ public class SalvoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SalvoApplication.class, args);
 	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 	@Bean
 	public CommandLineRunner initData(PlayerRepository repository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 
 
 			// Players
-			Player p1 = new Player("jackyB","jacky@kek.com", "Jack", "Bauer");
+			Player p1 = new Player("jackyB","jacky@kek.com", "Jack", "Bauer", "11111111");
 			repository.save(p1);
-			Player p2 = new Player("chloeO","chloe@na.com","Chloe", "O'Brian");
+			Player p2 = new Player("chloeO","chloe@na.com","Chloe", "O'Brian","22222222");
 			repository.save(p2);
-			Player p3 = new Player("kimB", "kim@was.com", "Kim", "Bauer");
+			Player p3 = new Player("kimB", "kim@was.com", "Kim", "Bauer","33333333");
 			repository.save(p3);
-			Player p4 = new Player("davidP","david@hey.com","David", "Palmer");
+			Player p4 = new Player("davidP","david@hey.com","David", "Palmer","44444444");
 			repository.save(p4);
-			Player p5 =  new Player("michelleD", "michelle@fuck.com","Michelle", "Dessler");
+			Player p5 =  new Player("michelleD", "michelle@fuck.com","Michelle", "Dessler", "55555555");
 			repository.save(p5);
-			Player p6 =  new Player("keko", "keckse@live.de", "Kendrick", "Jafar");
+			Player p6 =  new Player("keko", "keckse@live.de", "Kendrick", "Jafar", "66666666");
 			repository.save(p6);
 
 
@@ -153,5 +173,40 @@ public class SalvoApplication {
 
 
 		};
+	}
+}
+
+
+@Configuration
+@EnableWebSecurity
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
+				.antMatchers("/**").hasAuthority("USER")
+				.and()
+				.formLogin();
+	}
+}
+
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+	@Autowired
+	PlayerRepository repopl;
+
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(inputUser-> {
+			Player player = repopl.findByUserName(inputUser);
+			if (player != null) {
+				return new User(player.getUserName(), player.getPassword(),
+						AuthorityUtils.createAuthorityList("USER"));
+			} else {
+				throw new UsernameNotFoundException("Unknown user: " + inputUser);
+			}
+		});
 	}
 }
