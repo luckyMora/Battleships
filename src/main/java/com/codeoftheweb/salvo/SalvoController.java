@@ -36,7 +36,7 @@ public class SalvoController {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
-        repoP.save(new Player(firstName, lastName, email, userName, passwordEn.encode(password)));
+        repoP.save(new Player(userName, email, firstName, lastName, passwordEn.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
