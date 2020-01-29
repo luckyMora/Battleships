@@ -50,15 +50,15 @@ public class SalvoApplication {
 			// Players
 			Player p1 = new Player("jackyB","jacky@kek.com", "Jack", "Bauer", passwordEncoder.encode("11111111"));
 			repository.save(p1);
-			Player p2 = new Player("chloeO","chloe@na.com","Chloe", "O'Brian","22222222");
+			Player p2 = new Player("chloeO","chloe@na.com","Chloe", "O'Brian",passwordEncoder.encode("22222222"));
 			repository.save(p2);
-			Player p3 = new Player("kimB", "kim@was.com", "Kim", "Bauer","33333333");
+			Player p3 = new Player("kimB", "kim@was.com", "Kim", "Bauer",passwordEncoder.encode("33333333"));
 			repository.save(p3);
-			Player p4 = new Player("davidP","david@hey.com","David", "Palmer","44444444");
+			Player p4 = new Player("davidP","david@hey.com","David", "Palmer",passwordEncoder.encode("44444444"));
 			repository.save(p4);
-			Player p5 =  new Player("michelleD", "michelle@fuck.com","Michelle", "Dessler", "55555555");
+			Player p5 =  new Player("michelleD", "michelle@fuck.com","Michelle", "Dessler", passwordEncoder.encode("55555555"));
 			repository.save(p5);
-			Player p6 =  new Player("keko", "keckse@live.de", "Kendrick", "Jafar", "66666666");
+			Player p6 =  new Player("keko", "keckse@live.de", "Kendrick", "Jafar", passwordEncoder.encode("66666666"));
 			repository.save(p6);
 
 
@@ -220,11 +220,14 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/style2.css").permitAll()
 				.antMatchers("/manager").permitAll()
 				.antMatchers("/web/games*").permitAll()
+				.antMatchers("/web/index*").permitAll()
+				.antMatchers("/web/ranking*").permitAll()
 				.antMatchers("/api/games*").permitAll()
+				.antMatchers("/api/players*").permitAll()
 				//.antMatchers("/api/manager*").permitAll()
 				.antMatchers("/web/manager*").permitAll()
 				.antMatchers("/api/ranking*").permitAll()
-				.antMatchers("/api/game_view*").hasAuthority("USER")
+				.antMatchers("/api/game_view*").permitAll()
 				.anyRequest().authenticated().and()
 				.formLogin()
 

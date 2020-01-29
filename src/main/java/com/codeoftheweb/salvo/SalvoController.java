@@ -82,6 +82,7 @@ public class SalvoController {
     public List<Object> getPlayersInfo(Player player) {
         List<Object> playersInfoList = new ArrayList<>();
         Map<String, Object> playersInfo = new HashMap<>();
+        playersInfo.put("Username", player.getUserName());
         playersInfo.put("PlayerID", player.getId());
         playersInfo.put("PlayerFirstName", player.getFirstName() );
         playersInfo.put("PlayerLastName", player.getLastName());
