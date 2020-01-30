@@ -4,6 +4,9 @@ package com.codeoftheweb.salvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -39,42 +42,62 @@ public class SalvoController {
         repoP.save(new Player(userName, email, firstName, lastName, passwordEn.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @RequestMapping("/games")
     public List<Object> getAll() {
-        List<Object> gamesInfoList = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getName());
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+           Player loggedPlayer = new Player();
+              loggedPlayer  =     repoP.findByUserName(authentication.getName());
+            System.out.println(loggedPlayer.getUserName());
 
-        repo.findAll().forEach(game -> {
+        List<Object> gamesInfoList = new ArrayList<>();
+            Player finalLoggedPlayer = loggedPlayer;
+            repo.findAll().forEach(game -> {
+
             Map<String, Object> gameInfo = new HashMap<>();
             gameInfo.put("created",game.getDate().toString());
                 gameInfo.put("Game_Id",game.getGameId());
                 gameInfo.put("Gameplayers", getgameplayersinfo(game));
-                System.out.println(game.getGameId());
+                gameInfo.put("currentLoginUserName", finalLoggedPlayer.getUserName());
+                //gameInfo.put("Current",finalLoggedPlayer);
+                //System.out.println(game.getGameId());
                 gamesInfoList.add(gameInfo);
 
         });
 
-        return gamesInfoList;
+        return gamesInfoList;}
+        else return null;
+
+    }
+
+    private HashMap<String, Object> doMap(String key, Object value) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
     }
 
 
 
-
-
-
-    public List<Object> getgameplayersinfo(Game game) {
-        List<Object> gameplayersInfoList = new ArrayList<>();
-        game.gamePlayer.forEach( g -> {
-                    Map<String, Object> gameplayersInfos = new HashMap<>();
-                    gameplayersInfos.put("Gameplayer Id",g.getGamePlayerId() );
-                    gameplayersInfos.put("Player", getPlayersInfo(g.getPlayer()));
-                    gameplayersInfos.put("Ships", getShipsInfo(g));
-                    gameplayersInfos.put("Salvos", getSalvosInfo(g));
-                    gameplayersInfoList.add(gameplayersInfos);
+    public Map<String,Object> getgameplayersinfo(Game game) {
+        Map<String,Object> gameplayersInfos = new HashMap<>();
+        int i = 1;
+        //        game.gamePlayer.forEach( g,(i) ->
+        for(GamePlayer g : game.gamePlayer)
+                {
+                    //Map<String, Object> gameplayersInfos = new HashMap<>();
+                    gameplayersInfos.put("PlayerName" + i,g.getPlayer().getUserName());
+                    gameplayersInfos.put("Player_Id" + i,g.getPlayer().getId());
+                    gameplayersInfos.put("GamePlayer_Id" + i,g.getGamePlayerId());
+                    i++;
+                    //gameplayersInfos.put("Ships", getShipsInfo(g));
+                    //gameplayersInfos.put("Salvos", getSalvosInfo(g));
+                    //gameplayersInfoList.add(gameplayersInfos);
 
                 }
-                );
-        return gameplayersInfoList;
+
+        return gameplayersInfos;
     }
 
 
@@ -224,6 +247,17 @@ public class SalvoController {
             rankingInfosList.add(rankingInfo);
         });
         return rankingInfosList;
+    }
+    @RestController
+    public class AppController {
+
+
+
+        @RequestMapping("/player")
+        public List<Player> getAll(Authentication authentication) {
+            System.out.println(authentication.getName());
+            return null;
+        }
     }
 
 

@@ -196,7 +196,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 	@Override
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(inputUser-> {
-			System.out.println(inputUser);
+			//System.out.println(inputUser);
 			Player player = repopl.findByUserName(inputUser);
 			if (player != null) {
 				return new User(player.getUserName(), player.getPassword(),
@@ -228,7 +228,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/web/manager*").permitAll()
 				.antMatchers("/api/ranking*").permitAll()
 				.antMatchers("/api/game_view*").permitAll()
+				.antMatchers("/api/player*").permitAll()
+				//.antMatchers("/**").permitAll()
+				.antMatchers("/**").hasAuthority("USER")
+
 				.anyRequest().authenticated().and()
+
 				.formLogin()
 
 				.usernameParameter("userName")

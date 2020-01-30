@@ -45,8 +45,8 @@ getData()
         tableheadrow.appendChild(tabledatascore)
 
         let tablebody = document.createElement("tbody")
+
         for (let i = 0; i < data.length; i++) {
-            //        data.forEach(element => {
             let tr = document.createElement("tr")
             let cell1 = document.createElement("td")
             let cell2 = document.createElement("td")
