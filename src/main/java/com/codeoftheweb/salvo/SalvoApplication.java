@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @SpringBootApplication
 public class SalvoApplication {
 
@@ -181,7 +181,7 @@ public class SalvoApplication {
 
 		};
 	}
-}
+
 
 
 
@@ -196,7 +196,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 	@Override
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(inputUser-> {
-			//System.out.println(inputUser);
+			System.out.println(inputUser);
 			Player player = repopl.findByUserName(inputUser);
 			if (player != null) {
 				return new User(player.getUserName(), player.getPassword(),
@@ -212,25 +212,37 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@CrossOrigin(origins = "http://127.0.0.1:5500")
+	@CrossOrigin(origins = "http://127.0.0.1:5500/")
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
 				.authorizeRequests()
+				.antMatchers("/**").permitAll()
 				.antMatchers("/style2.css").permitAll()
+				.antMatchers("/BFotos/**").permitAll()
 				.antMatchers("/manager").permitAll()
-				.antMatchers("/web/games*").permitAll()
-				.antMatchers("/web/index*").permitAll()
-				.antMatchers("/web/ranking*").permitAll()
+				.antMatchers("/index.js").permitAll()
+				.antMatchers("/login.js").permitAll()
+				.antMatchers("/register.js").permitAll()
+				.antMatchers("/ranking.js").permitAll()
+				.antMatchers("/index.html").permitAll()
+				.antMatchers("/ranking.html").permitAll()
+
+
+				//.antMatchers("/web/ranking*").permitAll()
+				//.antMatchers("/web/login.html").permitAll()
+				.antMatchers("/login.html").permitAll()
 				.antMatchers("/api/games*").permitAll()
 				.antMatchers("/api/players*").permitAll()
-				//.antMatchers("/api/manager*").permitAll()
+				.antMatchers("/api/login*").permitAll()
+
+				.antMatchers("/api/manager*").permitAll()
 				.antMatchers("/web/manager*").permitAll()
 				.antMatchers("/api/ranking*").permitAll()
 				.antMatchers("/api/game_view*").permitAll()
 				.antMatchers("/api/player*").permitAll()
-				//.antMatchers("/**").permitAll()
-				.antMatchers("/**").hasAuthority("USER")
+
+				.antMatchers("/**").permitAll()
 
 				.anyRequest().authenticated().and()
 
@@ -266,4 +278,4 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		}
 	}
-}
+}}

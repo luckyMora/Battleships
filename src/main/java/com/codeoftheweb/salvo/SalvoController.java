@@ -44,13 +44,18 @@ public class SalvoController {
     }
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @RequestMapping("/games")
-    public List<Object> getAll() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
+    public List<Object> getAll(Authentication authentication) {
+
+
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.isAuthenticated());
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
            Player loggedPlayer = new Player();
               loggedPlayer  =     repoP.findByUserName(authentication.getName());
-            System.out.println(loggedPlayer.getUserName());
+            //System.out.println(loggedPlayer.getUserName());
+
+
+
 
         List<Object> gamesInfoList = new ArrayList<>();
             Player finalLoggedPlayer = loggedPlayer;
@@ -61,6 +66,8 @@ public class SalvoController {
                 gameInfo.put("Game_Id",game.getGameId());
                 gameInfo.put("Gameplayers", getgameplayersinfo(game));
                 gameInfo.put("currentLoginUserName", finalLoggedPlayer.getUserName());
+                gameInfo.put("Score", getScoreInfo(game));
+
                 //gameInfo.put("Current",finalLoggedPlayer);
                 //System.out.println(game.getGameId());
                 gamesInfoList.add(gameInfo);
@@ -84,16 +91,12 @@ public class SalvoController {
         Map<String,Object> gameplayersInfos = new HashMap<>();
         int i = 1;
         //        game.gamePlayer.forEach( g,(i) ->
-        for(GamePlayer g : game.gamePlayer)
-                {
+        for(GamePlayer g : game.gamePlayer) {
                     //Map<String, Object> gameplayersInfos = new HashMap<>();
                     gameplayersInfos.put("PlayerName" + i,g.getPlayer().getUserName());
                     gameplayersInfos.put("Player_Id" + i,g.getPlayer().getId());
                     gameplayersInfos.put("GamePlayer_Id" + i,g.getGamePlayerId());
                     i++;
-                    //gameplayersInfos.put("Ships", getShipsInfo(g));
-                    //gameplayersInfos.put("Salvos", getSalvosInfo(g));
-                    //gameplayersInfoList.add(gameplayersInfos);
 
                 }
 
@@ -110,22 +113,25 @@ public class SalvoController {
         playersInfo.put("PlayerFirstName", player.getFirstName() );
         playersInfo.put("PlayerLastName", player.getLastName());
         playersInfo.put("PlayerEmail", player.getEmail());
-        playersInfo.put("Score", getScoreInfo(player));
+        //playersInfo.put("Score", getScoreInfo(player));
         playersInfoList.add(playersInfo);
         return playersInfoList;
     }
 
 
 
-    public List<Object> getScoreInfo(Player player) {
-        List<Object> ScoreInfoList = new ArrayList<>();
-        player.getScores().stream().forEach( sc -> {
-            Map<String, Object> scoreInfo = new HashMap<>();
-            scoreInfo.put("ScoreID", sc.getScoreID());
-            scoreInfo.put("ActualScore", sc.getActualscore());
-            ScoreInfoList.add(scoreInfo);
 
-        });
+    public Map<String,Object> getScoreInfo(Game game) {
+        Map<String,Object> ScoreInfoList = new HashMap<>();
+        int i = 1;
+        for(Score sc : game.scores){
+
+
+            ScoreInfoList.put("ScoreID" + i, sc.getScoreID());
+            ScoreInfoList.put("ActualScore" + i, sc.getActualscore());
+            i++;
+
+        };
 
         return ScoreInfoList;
     }
