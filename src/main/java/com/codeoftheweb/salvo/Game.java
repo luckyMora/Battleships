@@ -18,7 +18,6 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long gameId;
-    private String gameName;
     Date date;
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
@@ -28,8 +27,7 @@ public class Game {
     Set<GamePlayer> gamePlayer;
 
     public Game (){ }
-    public Game(String gName, Date date) {
-        this.gameName = gName;
+    public Game(Date date) {
         this.date = date;
     }
 
@@ -52,13 +50,7 @@ public class Game {
     public void setId(long gId) {
         this.gameId = gId;
     }
-    public String getGameName() {
-        return gameName;
-    }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
 
 //    public void addgamePLayer(GamePlayer gameplayer){
 //        gameplayer.setGame(this);

@@ -30,15 +30,9 @@ logout = () => {
     let userName = document.getElementById("Username").value
     let password = document.getElementById("password").value
 
-    console.log("hey")
+
     fetch(URL, {
             method: "POST",
-            // credentials: "include",
-            // headers: {
-            //     Accept: "application/json",
-            //     "Content-Type": "application/x-www-form-urlencoded"
-            // },
-            // body: `userName=${userName}&password=${password}`
         })
         .then(response => {
             if (response.status === 200) {

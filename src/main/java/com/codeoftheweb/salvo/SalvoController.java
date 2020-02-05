@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+//import javax.jnlp.ClipboardService;
 import java.util.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -48,11 +49,9 @@ public class SalvoController {
 
 
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.isAuthenticated());
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-           Player loggedPlayer = new Player();
-              loggedPlayer  =     repoP.findByUserName(authentication.getName());
-            //System.out.println(loggedPlayer.getUserName());
+           Player loggedPlayer = repoP.findByUserName(authentication.getName());
+
 
 
 
@@ -79,6 +78,63 @@ public class SalvoController {
 
     }
 
+    public Map<String,Object> getgameplayersinfo(Game game) {
+        Map<String,Object> gameplayersInfos = new HashMap<>();
+        int i = 1;
+        for(GamePlayer g : game.gamePlayer) {
+            gameplayersInfos.put("PlayerName" + i,g.getPlayer().getUserName());
+            gameplayersInfos.put("Player_Id" + i,g.getPlayer().getId());
+            gameplayersInfos.put("GamePlayer_Id" + i,g.getGamePlayerId());
+            i++;
+
+        }
+
+        return gameplayersInfos;
+    }
+
+
+
+
+
+
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Object> createGame(Authentication authentication) {
+        Player loggedinplayer = repoP.findByUserName(authentication.getName());
+        List<Game> gameslist = new ArrayList<>();
+
+        repo.findAll().forEach(game -> {
+
+            if(game.getGamePlayer().size() < 2){
+                gameslist.add(game);
+            }
+        });
+
+
+        if (loggedinplayer == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else if (gameslist.size() > 0 ){
+            Game onegame = gameslist.get(0);
+
+            //if(){}
+
+            GamePlayer gamePlayer = new GamePlayer(loggedinplayer, onegame);
+
+            repo.save(onegame);
+            repoGP.save(gamePlayer);
+            return new ResponseEntity<>(doMap("GPid",gamePlayer.getGamePlayerId()), HttpStatus.CREATED);
+
+        }else {Game game = new Game(new Date());
+            GamePlayer gamePlayer = new GamePlayer(loggedinplayer, game);
+            repo.save(game);
+            repoGP.save(gamePlayer);
+
+            return new ResponseEntity<>(doMap("GPid",gamePlayer.getGamePlayerId()), HttpStatus.CREATED);
+        }
+
+    }
+
+
+
     private HashMap<String, Object> doMap(String key, Object value) {
         HashMap<String, Object> map = new HashMap<>();
         map.put(key, value);
@@ -87,21 +143,6 @@ public class SalvoController {
 
 
 
-    public Map<String,Object> getgameplayersinfo(Game game) {
-        Map<String,Object> gameplayersInfos = new HashMap<>();
-        int i = 1;
-        //        game.gamePlayer.forEach( g,(i) ->
-        for(GamePlayer g : game.gamePlayer) {
-                    //Map<String, Object> gameplayersInfos = new HashMap<>();
-                    gameplayersInfos.put("PlayerName" + i,g.getPlayer().getUserName());
-                    gameplayersInfos.put("Player_Id" + i,g.getPlayer().getId());
-                    gameplayersInfos.put("GamePlayer_Id" + i,g.getGamePlayerId());
-                    i++;
-
-                }
-
-        return gameplayersInfos;
-    }
 
 
 
@@ -265,6 +306,7 @@ public class SalvoController {
             return null;
         }
     }
+
 
 
 }

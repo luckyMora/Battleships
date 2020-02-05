@@ -63,9 +63,9 @@ public class SalvoApplication {
 
 
 			//Games
-			Game g1 = new Game("Game 1",new Date());
+			Game g1 = new Game(new Date());
 			gameRepository.save(g1);
-			Game g2 = new Game("Game 2",new Date());
+			Game g2 = new Game(new Date());
 			gameRepository.save(g2);
 
 
