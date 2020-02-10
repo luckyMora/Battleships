@@ -113,15 +113,18 @@ public class SalvoController {
         if (loggedinplayer == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else if (gameslist.size() > 0 ){
-            Game onegame = gameslist.get(0);
+            Game opengame = gameslist.get(0);
 
-            //if(){}
+            if(opengame.getGamePlayer().stream().findFirst().get().getPlayer() == loggedinplayer){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            } else {
 
-            GamePlayer gamePlayer = new GamePlayer(loggedinplayer, onegame);
-
-            repo.save(onegame);
+            GamePlayer gamePlayer = new GamePlayer(loggedinplayer, opengame);
+            System.out.println(opengame.getGamePlayer().stream().findFirst().get().getPlayer().getUserName());
+            repo.save(opengame);
             repoGP.save(gamePlayer);
             return new ResponseEntity<>(doMap("GPid",gamePlayer.getGamePlayerId()), HttpStatus.CREATED);
+            }
 
         }else {Game game = new Game(new Date());
             GamePlayer gamePlayer = new GamePlayer(loggedinplayer, game);
@@ -258,7 +261,6 @@ public class SalvoController {
         List<Object> gamesviewList = new ArrayList<>();
         GamePlayer currentGP = repoGP.findByGamePlayerId(gamePlayerID);
 
-//      System.out.println(currentGP.getPlayer().getEmail());
         Map<String, Object> gameplayerInfos = new HashMap<>();
         gameplayerInfos.put("GamplayerID",currentGP.getGamePlayerId());
         gameplayerInfos.put("User", currentGP.getPlayer().getUserName());
@@ -300,10 +302,26 @@ public class SalvoController {
 
 
 
-        @RequestMapping("/player")
-        public List<Player> getAll(Authentication authentication) {
-            System.out.println(authentication.getName());
-            return null;
+        @RequestMapping(path = "/games/players/{gamePlayerID}/ships", method = RequestMethod.POST)
+        public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, Authentication authentication, @RequestBody List<Ship> ships) {
+            Player loggedinplayer = repoP.findByUserName(authentication.getName());
+           GamePlayer currentgameP = repoGP.findByGamePlayerId(gamePlayerID);
+            System.out.println(ships);
+            if (loggedinplayer == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }else if(currentgameP.getPlayer() != loggedinplayer){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }else if(currentgameP.getShips().size() == 5){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }else {
+                ships.forEach(ship -> {
+                    currentgameP.addShip(ship);
+                    repoGP.save(currentgameP);
+                });
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+
+           // return null;
         }
     }
 

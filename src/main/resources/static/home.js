@@ -71,7 +71,7 @@ getgamesData()
 
 
 function rejoinGame(gameplayerid) {
-    window.open("http://localhost:8080/web/game.html?gp=" + gameplayerid);
+    window.open("http://localhost:8080/games.html?gp=" + gameplayerid);
 }
 
 
@@ -100,9 +100,8 @@ function createGameFunction() {
             console.log(res)
             if (res.GPid) {
                 console.log(res.GPid);
-                window.open("http://localhost:8080/web/game.html?gp=" + res.GPid);
+                window.open("http://localhost:8080/games.html?gp=" + res.GPid);
             }
         })
         .catch(error => console.log(error));
 }
-//createGameFunction()

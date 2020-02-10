@@ -120,7 +120,7 @@ public class SalvoApplication {
 			List<String> l5 = Arrays.asList("A1","B1");
 			List<String> l6 = Arrays.asList("A2","B2","C2");
 			List<String> l7 = Arrays.asList("A3","B3","C3","D3");
-			List<String> l8 = Arrays.asList("A$","B4","C4","D4","E4");
+			List<String> l8 = Arrays.asList("A4","B4","C4","D4","E4");
 
 
 			//Ships

@@ -102,7 +102,6 @@ footer {
 
     display: flex;
     justify-content: center;
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -113,4 +112,48 @@ footer {
 #tableid {
     display: flex;
     text-align: center;
+}
+
+#ship1 {
+    background-color: chartreuse;
+    height: 28px;
+    width: 60px;
+    position: relative;
+    margin: 1px;
+}
+
+#ship2 {
+    background-color: chartreuse;
+    height: 28px;
+    width: 98px;
+    position: relative;
+    margin: 1px;
+}
+
+#ship3 {
+    background-color: chartreuse;
+    height: 28px;
+    width: 128px;
+    position: relative;
+    margin: 1px;
+}
+
+#ship4 {
+    background-color: chartreuse;
+    height: 28px;
+    width: 163px;
+    position: relative;
+    margin: 1px;
+}
+
+.invisible {
+    display: none;
+}
+
+.hovered {
+    background-color: blue;
+}
+
+.hold {
+    border: solid black 2px;
 }
