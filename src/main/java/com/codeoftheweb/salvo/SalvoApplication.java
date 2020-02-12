@@ -113,14 +113,14 @@ public class SalvoApplication {
 
 
 			//Ship Laocations List
-			List<String> l1 = Arrays.asList("A1","A2");
-			List<String> l2 = Arrays.asList("B1","B2","B3");
-			List<String> l3 = Arrays.asList("C1","C2","C3","C4");
-			List<String> l4 = Arrays.asList("D1","D2","D3","D4","D5");
-			List<String> l5 = Arrays.asList("A1","B1");
-			List<String> l6 = Arrays.asList("A2","B2","C2");
-			List<String> l7 = Arrays.asList("A3","B3","C3","D3");
-			List<String> l8 = Arrays.asList("A4","B4","C4","D4","E4");
+			List<String> l1 = Arrays.asList("01","02");
+			List<String> l2 = Arrays.asList("11","12","13");
+			List<String> l3 = Arrays.asList("21","22","23","24");
+			List<String> l4 = Arrays.asList("31","32","33","34","35");
+			List<String> l5 = Arrays.asList("01","11");
+			List<String> l6 = Arrays.asList("02","12","22");
+			List<String> l7 = Arrays.asList("03","13","23","33");
+			List<String> l8 = Arrays.asList("04","14","24","34","44");
 
 
 			//Ships
