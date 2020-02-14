@@ -114,7 +114,10 @@ footer {
     text-align: center;
 }
 
-#ship1 {
+#submarine,
+#destroyer,
+#cruiser,
+#carrier {
     background-color: chartreuse;
     height: 28px;
     width: 60px;
@@ -122,28 +125,17 @@ footer {
     margin: 1px;
 }
 
-#ship2 {
-    background-color: chartreuse;
-    height: 28px;
+#destroyer {
+
     width: 98px;
-    position: relative;
-    margin: 1px;
 }
 
-#ship3 {
-    background-color: chartreuse;
-    height: 28px;
+#cruiser {
     width: 128px;
-    position: relative;
-    margin: 1px;
 }
 
-#ship4 {
-    background-color: chartreuse;
-    height: 28px;
+#carrier {
     width: 163px;
-    position: relative;
-    margin: 1px;
 }
 
 .invisible {
@@ -156,4 +148,12 @@ footer {
 
 .hold {
     border: solid black 2px;
+}
+
+.ship {
+    display: flex;
+}
+
+.filled {
+    background-color: black;
 }

@@ -29,6 +29,9 @@ public class SalvoController {
     @Autowired
     private PasswordEncoder passwordEn;
 
+    @Autowired
+    private ShipRepository repoSh;
+
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
 
@@ -297,8 +300,7 @@ public class SalvoController {
         });
         return rankingInfosList;
     }
-    @RestController
-    public class AppController {
+
 
 
 
@@ -317,6 +319,7 @@ public class SalvoController {
                 ships.forEach(ship -> {
                     currentgameP.addShip(ship);
                     repoGP.save(currentgameP);
+                    repoSh.save(ship);
                 });
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
@@ -327,5 +330,5 @@ public class SalvoController {
 
 
 
-}
+
 

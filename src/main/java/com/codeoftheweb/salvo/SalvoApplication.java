@@ -82,28 +82,28 @@ public class SalvoApplication {
 
 
 			//Salvos
-			Salvo Sa1 = new Salvo(1,"H1");
+			Salvo Sa1 = new Salvo(1,"71");
 			gp1.addSalvo(Sa1);
 			salvoRepository.save(Sa1);
-			Salvo Sa2 = new Salvo(2,"G1");
+			Salvo Sa2 = new Salvo(2,"91");
 			gp1.addSalvo(Sa2);
 			salvoRepository.save(Sa2);
-			Salvo Sa3 = new Salvo(3,"H3");
+			Salvo Sa3 = new Salvo(3,"73");
 			gp1.addSalvo(Sa3);
 			salvoRepository.save(Sa3);
-			Salvo Sa4 = new Salvo(4,"H5");
+			Salvo Sa4 = new Salvo(4,"75");
 			gp1.addSalvo(Sa4);
 			salvoRepository.save(Sa4);
-			Salvo Sa5 = new Salvo(1,"A1");
+			Salvo Sa5 = new Salvo(1,"01");
 			gp2.addSalvo(Sa5);
 			salvoRepository.save(Sa5);
-			Salvo Sa6 = new Salvo(2,"B6");
+			Salvo Sa6 = new Salvo(2,"16");
 			gp2.addSalvo(Sa6);
 			salvoRepository.save(Sa6);
-			Salvo Sa7 = new Salvo(3,"C7");
+			Salvo Sa7 = new Salvo(3,"27");
 			gp2.addSalvo(Sa7);
 			salvoRepository.save(Sa7);
-			Salvo Sa8 = new Salvo(4,"H8");
+			Salvo Sa8 = new Salvo(4,"78");
 			gp2.addSalvo(Sa8);
 			salvoRepository.save(Sa8);
 

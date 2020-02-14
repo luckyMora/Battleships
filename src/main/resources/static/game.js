@@ -22,8 +22,9 @@ getData()
     .then(data => {
         console.log(data);
         //                           Display Names on top of the tables
-        let Player = {};
-        let enemy = {};
+        // let Player = {};
+        // let enemy = {};
+
         console.log("na")
         let x = data[0].GamplayerID
         let myname = data[0].User
@@ -42,7 +43,7 @@ getData()
         data[0].Ships.forEach(ship => {
             ship.ShipLocation.forEach(location => {
                 myShipsLocation.push(location)
-                document.getElementById(location).style.backgroundColor = "black";
+                document.getElementById(location).className = "filled";
             })
 
         });
@@ -67,189 +68,178 @@ getData()
 
 
     .catch(error => console.log(error));
-
-
-
-// function usingShips() {
-
-
-//     //is two cells big
-//     let ships = document.getElementById("ship1");
-//     ships.addEventListener("dragstart", dragStart(ship1));
-//     ships.addEventListener("dragend", dragEnd(ship1));
-//     // let ship2 = document.getElementById("ship2");
-//     // ship2.addEventListener("dragstart", dragStart(ship2));
-//     // ship2.addEventListener("dragend", dragEnd(ship2));
-//     // let ship3 = document.getElementById("ship3");
-//     // ship3.addEventListener("dragstart", dragStart(ship3));
-//     // ship3.addEventListener("dragend", dragEnd(ship3));
-//     // let ship4 = document.getElementById("ship4");
-//     // ship4.addEventListener("dragstart", dragStart(ship4));
-//     // ship4.addEventListener("dragend", dragEnd(ship4));
-
-// }
-
-
-let shipid = id;
-let cellid = id;
+let dragStartShip = "";
+let shipid = "";
+let cellid = "";
+let Shipsarray = [];
 
 function onDragStart(event) {
     event
         .dataTransfer
         .setData('ShipID', event.target.id);
+    dragStartShip = event.target
+    console.log(dragStartShip)
     this.shipid = event.target.id
-    console.log(event.target.id)
     console.log(this.shipid)
 
-    // Ship.className += "hold"
-    // Ship.className = "invisible"
+    setTimeout(() => event.target.className = "invisible", 0)
+
+
 }
 
 
 function onDrop(event) {
+
     event
         .dataTransfer
         .setData('CellID', event.target.id);
+    if (event.target.className == "filled" || event.target.className !== "empty" || event.target.className == "") {
+        dragStartShip.classList.remove("invisible")
+        dragStartShip = ""
 
-    event.target.style.backgroundColor = "black";
-    this.cellid = event.target.id
-    console.log(event.target.id)
-    console.log(this.cellid)
-    createShips()
+    } else {
 
-
+        event.target.className = "filled";
+        this.cellid = event.target.id
+        console.log(this.cellid)
+        createShips(this.cellid)
+        dragStartShip = ""
+    }
 }
 
-function createShips() {
-    console.log(this.cellid)
-    console.log(this.shipid)
-    // console.log(this.cellid.slice(1))
-    // let zahlen = this.cellid.slice(1)
-    // let n = parseInt(zahlen)
-    // console.log(typeof n)
-    // zahlen++
-    // console.log(zahlen)
 
-    if (this.shipid == "ship1") {
-        if (this.cellid.slice(1) == 9) {
-            let ShipLength = 1
-            let zahl1 = this.cellid.slice(0, 1)
-            let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
-            for (let i = 0; i < ShipLength; i++) {
-                m--
-                console.log(m)
-                let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
-            }
 
-        } else {
-            let ShipLength = 1
+function positionShips(länge, a, b, cid, sid) {
+    let checked1 = document.querySelectorAll("input[type=checkbox]:checked")
+    let array = []
+    let completeShip = {
+        type: sid,
+        locations: [cid]
+    }
+    for (let j = 0; j < checked1.length; j++) {
+        array.push(checked1[j].name)
+
+    }
+    console.log(array)
+    if (array.includes("vertical" + b)) {
+        if (this.cellid.slice(0, 1) > a) {
+            let ShipLength = länge
             let zahl1 = this.cellid.slice(0, 1)
             let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
+            let m = parseInt(zahl1)
+            for (let i = 0; i < ShipLength; i++) {
+                m--
+                let zahl2 = m.toString()
+                let IDzahl = zahl2 + zahl
+                document.getElementById(IDzahl).className = "filled"
+                completeShip.locations.push(IDzahl)
+
+            }
+        } else {
+            let ShipLength = länge
+            let zahl1 = this.cellid.slice(0, 1)
+            let zahl = this.cellid.slice(1)
+            let m = parseInt(zahl1)
             for (let i = 0; i < ShipLength; i++) {
                 m++
-                console.log(m)
                 let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
+                let IDzahl = zahl2 + zahl
+                document.getElementById(IDzahl).className = "filled"
+                completeShip.locations.push(IDzahl)
+
             }
         }
-    } else if (this.shipid == "ship2") {
-        if (this.cellid.slice(1) > 7) {
-            let ShipLength = 2
+    } else {
+        if (this.cellid.slice(1) > a) {
+            let ShipLength = länge
             let zahl1 = this.cellid.slice(0, 1)
             let zahl = this.cellid.slice(1)
             let m = parseInt(zahl)
             for (let i = 0; i < ShipLength; i++) {
                 m--
-                console.log(m)
                 let zahl2 = m.toString()
                 let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
+                document.getElementById(IDzahl).className = "filled"
+                completeShip.locations.push(IDzahl)
             }
         } else {
-            let ShipLength = 2
+            let ShipLength = länge
             let zahl1 = this.cellid.slice(0, 1)
             let zahl = this.cellid.slice(1)
             let m = parseInt(zahl)
             for (let i = 0; i < ShipLength; i++) {
                 m++
-                console.log(m)
                 let zahl2 = m.toString()
                 let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
-            }
-            m++
-        }
-    } else if (this.shipid == "ship3") {
-        if (this.cellid.slice(1) > 6) {
-            let ShipLength = 3
-            let zahl1 = this.cellid.slice(0, 1)
-            let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
-            for (let i = 0; i < ShipLength; i++) {
-                m--
-                console.log(m)
-                let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
-            }
-        } else {
-            let ShipLength = 3
-            let zahl1 = this.cellid.slice(0, 1)
-            let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
-            for (let i = 0; i < ShipLength; i++) {
-                m++
-                console.log(m)
-                let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
-            }
-        }
-    } else if (this.shipid = "ship4") {
-        if (this.cellid.slice(1) > 5) {
-            let ShipLength = 4
-            let zahl1 = this.cellid.slice(0, 1)
-            let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
-            for (let i = 0; i < ShipLength; i++) {
-                m--
-                console.log(m)
-                let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
-            }
-        } else {
-            let ShipLength = 4
-            let zahl1 = this.cellid.slice(0, 1)
-            let zahl = this.cellid.slice(1)
-            let m = parseInt(zahl)
-            for (let i = 0; i < ShipLength; i++) {
-                m++
-                console.log(m)
-                let zahl2 = m.toString()
-                let IDzahl = zahl1 + zahl2
-                console.log(IDzahl)
-                document.getElementById(IDzahl).style.backgroundColor = "black"
+                document.getElementById(IDzahl).className = "filled"
+                completeShip.locations.push(IDzahl)
             }
         }
 
     }
+    Shipsarray.push(completeShip)
+    console.log(Shipsarray)
+}
 
+function createShips(id) {
+    if (this.shipid == "submarine") {
+        positionShips(1, 8, "1", id, "submarine")
+    } else if (this.shipid == "destroyer") {
+        positionShips(2, 7, "2", id, "destroyer")
+    } else if (this.shipid == "cruiser") {
+        positionShips(3, 6, "3", id, "cruiser")
+    } else if (this.shipid = "carrier") {
+        positionShips(4, 5, "4", id, "carrier")
+    }
 }
 
 
 function onDragOver(event) {
     event.preventDefault();
 }
+
+document.getElementById("resetAllbutton").addEventListener("click", () => {
+    Shipsarray = []
+    let blacktdlist = document.getElementById("mytable").querySelectorAll("td[class=filled]")
+    for (let i = 0; i < blacktdlist.length; i++) {
+        blacktdlist[i].className = "empty"
+    }
+    let invisbleships = document.querySelectorAll(".invisible")
+    console.log(invisbleships)
+    for (let j = 0; j < invisbleships.length; j++) {
+        invisbleships[j].classList.remove("invisible")
+    }
+    console.log(invisbleships)
+})
+
+document.getElementById("fixButton").addEventListener("click", () => {
+    console.log('Shipsarray', Shipsarray)
+
+    if (Shipsarray.length == 4) {
+        fetch(`/api/games/players/${param}/ships`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(Shipsarray)
+            })
+            .then(response => {
+                console.log(response);
+
+                if (response.status === 201) {
+                    console.log("Ships send to backend");
+                    document.getElementById("ShipBtn").className = "invisible";
+                } else {
+                    console.log("failed to send ships");
+                }
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => console.log(error));
+    } else {
+        alert("You did not post all Ships")
+    }
+
+})
