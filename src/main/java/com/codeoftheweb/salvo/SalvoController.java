@@ -32,6 +32,9 @@ public class SalvoController {
     @Autowired
     private ShipRepository repoSh;
 
+    @Autowired
+    private SalvoRepository repoSa;
+
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
 
@@ -307,7 +310,7 @@ public class SalvoController {
         @RequestMapping(path = "/games/players/{gamePlayerID}/ships", method = RequestMethod.POST)
         public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, Authentication authentication, @RequestBody List<Ship> ships) {
             Player loggedinplayer = repoP.findByUserName(authentication.getName());
-           GamePlayer currentgameP = repoGP.findByGamePlayerId(gamePlayerID);
+            GamePlayer currentgameP = repoGP.findByGamePlayerId(gamePlayerID);
             System.out.println(ships);
             if (loggedinplayer == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -326,7 +329,28 @@ public class SalvoController {
 
            // return null;
         }
+
+
+
+    @RequestMapping(path = "/games/players/{gamePlayerID}/salvos", method = RequestMethod.POST)
+    public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, Authentication authentication, @RequestBody Salvo  salvo) {
+        Player loggedplayer = repoP.findByUserName(authentication.getName());
+        GamePlayer currentgamePl = repoGP.findByGamePlayerId(gamePlayerID);
+        System.out.println(salvo);
+        if (loggedplayer == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else if(currentgamePl.getPlayer() != loggedplayer){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else {
+                currentgamePl.addSalvo(salvo);
+                repoGP.save(currentgamePl);
+                repoSa.save(salvo);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
     }
+
+}
 
 
 
