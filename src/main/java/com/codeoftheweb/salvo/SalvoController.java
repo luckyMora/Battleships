@@ -57,11 +57,6 @@ public class SalvoController {
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
            Player loggedPlayer = repoP.findByUserName(authentication.getName());
-
-
-
-
-
         List<Object> gamesInfoList = new ArrayList<>();
             Player finalLoggedPlayer = loggedPlayer;
             repo.findAll().forEach(game -> {
@@ -223,9 +218,6 @@ public class SalvoController {
         List<Integer> winList = new ArrayList<>();
         List<Integer> tieList = new ArrayList<>();
         List<Integer> loseList = new ArrayList<>();
-//        long[] winsList = new long[0];
-//        long[] tiesList = new long[0];
-//        long[] losesList = new long[0];
         System.out.println(player.getFirstName());
         player.getScores().forEach(score -> {
             Map<String, Object> ScoresInfo = new HashMap<>();
@@ -272,6 +264,7 @@ public class SalvoController {
         gameplayerInfos.put("User", currentGP.getPlayer().getUserName());
         gameplayerInfos.put("Ships", getShipsInfo(currentGP));
         gameplayerInfos.put("Salvos", getSalvosInfo(currentGP));
+        //gameplayerInfos.put("Hits", getHitsInfo(currentGP));
         gameplayerInfos.put("Enemy", getEnemyInfo(currentGP));
         gamesviewList.add(gameplayerInfos);
         ;

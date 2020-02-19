@@ -42,7 +42,7 @@ getgamesData()
                 gameNo.innerHTML = "GAME " + data[i].Game_Id
                 let players = document.createElement("p")
                 players.innerHTML = data[i].Gameplayers.PlayerName1 + " vs " + data[i].Gameplayers.PlayerName2
-                if (data[i].Score.ActualScore1 == 0 && data[i].Score.ActualScore2 == 0) {
+                if (data[i].Score.ActualScore1 == undefined && data[i].Score.ActualScore2 == undefined) {
                     let link = document.createElement("Button")
                     link.setAttribute("class", "stylelink")
                     link.innerHTML = "Rejoin"
