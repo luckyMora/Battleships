@@ -3,10 +3,7 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class GamePlayer {
@@ -85,6 +82,8 @@ public class GamePlayer {
         return salvos;
     }
 
+
+
     public void setSalvos(Set<Salvo> salvos) {
         this.salvos = salvos;
     }
@@ -101,5 +100,21 @@ public class GamePlayer {
     public void addSalvo(Salvo salvo){
         salvo.setGamePlayer(this);
         salvos.add(salvo);
+    }
+
+    public GamePlayer getOpponent(GamePlayer gamePlayer){
+        Map<String, GamePlayer> oppo = new HashMap<>();
+        if(gamePlayer.getGame().getGamePlayer().size() == 2){
+            gamePlayer.getGame().getGamePlayer()
+                    .stream()
+                    .forEach(gp -> {
+                        if(gp.getGamePlayerId() != gamePlayer.getGamePlayerId()){
+                            oppo.put("opponent", gp);
+                        }
+                    });
+            return oppo.get("opponent");
+        } else {
+            return null;
+        }
     }
 }

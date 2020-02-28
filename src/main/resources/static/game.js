@@ -1,9 +1,13 @@
 const urlParams = new URLSearchParams(window.location.search);
 const param = window.location.search.split("=")[1];
 const myParam = urlParams.get("myParam");
+let gameID = 0
 let safedSalvoslocations = []
 console.log("myParam", param);
 let Shipsarray = [];
+let yourTurn = true
+let ongoing = ""
+
 async function getData() {
     let response = await fetch(`http://localhost:8080/api/game_view/${param}`);
     console.log(response);
@@ -14,12 +18,14 @@ async function getData() {
             safedSalvoslocations.push(data[0].Salvos[i].SalvoLocation)
         }
     }
-    //console.log(safedSalvoslocations)
     console.log(data);
 
     //                           Display Names on top of the tables
+    ongoing = data[0].GameStatus
+    yourTurn = data[0].IsItYourTurn
     let turn = 0
     let turnNr = data[0].Salvos.length
+    gameID = data[0].gameID
     console.log(turnNr)
     if (turnNr != 0) {
         turn = data[0].Salvos[turnNr - 1].SalvoTurnNumber;
@@ -63,6 +69,16 @@ async function getData() {
     data[0].Salvos.forEach(salvo => {
         document.getElementById("1" + salvo.SalvoLocation).className = "shooting";
     });
+    //                               Display my Hits 
+    data[0].Hits.forEach(hit => {
+        document.getElementById("1" + hit).classList.remove = "fitted";
+        document.getElementById("1" + hit).className = "hitted";
+
+    })
+    //                               Display Turn Number
+    let roundNumber = data[0].Salvos.length + 1
+    document.getElementById("roundcounter").innerHTML = "Round " + roundNumber
+
 
     if (myShipsLocation.length > 0) {
         document.getElementById("ShipBtn").className = "invisible"
@@ -247,70 +263,104 @@ Array.from(document.getElementsByClassName("enemyGrid")).forEach(elem =>
         let saLocaton = salvoId.slice(1)
         console.log()
         console.log("nööööö")
-        if (safedSalvoslocations.includes(saLocaton)) {
-            console.log("position already destroyed")
-            salvoLocArray = []
-        } else {
-
-            if (salvoLocArray.length <= 1) {
-                console.log(salvoLocArray.length);
-
-                document.getElementById(salvoId).className = "shooting"
-                let salvoButton = document.getElementById("salvoBtn")
-                let rSalvoButton = document.createElement("button")
-                rSalvoButton.innerHTML = "Reset Salvo"
-                let sSalvoButton = document.createElement("button")
-                sSalvoButton.innerHTML = "Send Salvo"
-                salvoButton.appendChild(sSalvoButton)
-                salvoButton.appendChild(rSalvoButton)
-                rSalvoButton.onclick = () => {
+        if (yourTurn == true) {
+            if (ongoing == "ongoing") {
+                if (safedSalvoslocations.includes(saLocaton)) {
+                    console.log("position already destroyed")
                     salvoLocArray = []
-                    rSalvoButton.style.display = "none";
-                    sSalvoButton.style.display = "none";
-                    document.getElementById(salvoId).classList.remove("shooting")
+                } else {
+
+                    if (salvoLocArray.length <= 1) {
+                        console.log(salvoLocArray.length);
+
+                        document.getElementById(salvoId).className = "shooting"
+                        let salvoButton = document.getElementById("salvoBtn")
+                        let rSalvoButton = document.createElement("button")
+                        rSalvoButton.innerHTML = "Reset Salvo"
+                        let sSalvoButton = document.createElement("button")
+                        sSalvoButton.innerHTML = "Send Salvo"
+                        salvoButton.appendChild(sSalvoButton)
+                        salvoButton.appendChild(rSalvoButton)
+                        rSalvoButton.onclick = () => {
+                            salvoLocArray = []
+                            rSalvoButton.style.display = "none";
+                            sSalvoButton.style.display = "none";
+                            document.getElementById(salvoId).classList.remove("shooting")
+                        }
+                        sSalvoButton.onclick = () => {
+                            rSalvoButton.style.display = "none";
+                            sSalvoButton.style.display = "none";
+
+
+                            console.log(saLocaton)
+                            safedSalvoslocations.push(saLocaton)
+                            currentturn++
+                            let completeSalvo = {
+                                turnNumber: currentturn,
+                                salvolocations: saLocaton
+                            };
+                            fetch(`/api/games/players/${param}/salvos`, {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: {
+                                        "Content-type": "application/json"
+                                    },
+                                    body: JSON.stringify(completeSalvo)
+                                })
+                                .then(response => {
+                                    console.log(response);
+
+                                    if (response.status === 201) {
+                                        console.log("Salvo send to backend");
+                                    } else {
+                                        console.log("failed to send salvo");
+                                    }
+                                })
+                                // .then(res => {
+                                //     console.log(res);
+
+                                // })
+                                .catch(error => console.log(error));
+
+                            console.log("lucky")
+                            setTimeout(() => (getData()), 100)
+                            salvoLocArray = []
+
+                        }
+
+                    }
                 }
-                sSalvoButton.onclick = () => {
-                    rSalvoButton.style.display = "none";
-                    sSalvoButton.style.display = "none";
-
-
-                    console.log(saLocaton)
-                    safedSalvoslocations.push(saLocaton)
-                    currentturn++
-                    let completeSalvo = {
-                        turnNumber: currentturn,
-                        salvolocations: saLocaton
-                    };
-                    fetch(`/api/games/players/${param}/salvos`, {
-                            method: "POST",
-                            credentials: "include",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: JSON.stringify(completeSalvo)
-                        })
-                        .then(response => {
-                            console.log(response);
-
-                            if (response.status === 201) {
-                                console.log("Salvo send to backend");
-                            } else {
-                                console.log("failed to send salvo");
-                            }
-                        })
-                        // .then(res => {
-                        //     console.log(res);
-
-                        // })
-                        .catch(error => console.log(error));
-
-                    console.log("lucky")
-                    setTimeout(() => (getData()), 100)
-                    salvoLocArray = []
-
-                }
-
+            } else if (ongoing == "win") {
+                postScore(2)
+            } else if (ongoing == "lose") {
+                postScore(0)
+            } else {
+                postScore(1)
             }
         }
     })
 );
+
+function postScore(Score) {
+    fetch(`/api/games/players/${param}/${gameID}/score`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(Score)
+        })
+        .then(response => {
+            console.log(response);
+
+            if (response.status === 201) {
+                console.log("Score send to backend");
+            } else {
+                console.log("failed to send Score");
+            }
+        })
+        .then(res => {
+            console.log(res);
+        })
+        .catch(error => console.log(error));
+}

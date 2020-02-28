@@ -35,6 +35,9 @@ public class SalvoController {
     @Autowired
     private SalvoRepository repoSa;
 
+    @Autowired
+    private ScoreRepository repoSc;
+
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
 
@@ -56,8 +59,8 @@ public class SalvoController {
 
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-           Player loggedPlayer = repoP.findByUserName(authentication.getName());
-        List<Object> gamesInfoList = new ArrayList<>();
+            Player loggedPlayer = repoP.findByUserName(authentication.getName());
+            List<Object> gamesInfoList = new ArrayList<>();
             Player finalLoggedPlayer = loggedPlayer;
             repo.findAll().forEach(game -> {
 
@@ -67,9 +70,6 @@ public class SalvoController {
                 gameInfo.put("Gameplayers", getgameplayersinfo(game));
                 gameInfo.put("currentLoginUserName", finalLoggedPlayer.getUserName());
                 gameInfo.put("Score", getScoreInfo(game));
-
-                //gameInfo.put("Current",finalLoggedPlayer);
-                //System.out.println(game.getGameId());
                 gamesInfoList.add(gameInfo);
 
         });
@@ -260,17 +260,100 @@ public class SalvoController {
         GamePlayer currentGP = repoGP.findByGamePlayerId(gamePlayerID);
 
         Map<String, Object> gameplayerInfos = new HashMap<>();
+        gameplayerInfos.put("gameID", currentGP.getGame().getGameId());
         gameplayerInfos.put("GamplayerID",currentGP.getGamePlayerId());
         gameplayerInfos.put("User", currentGP.getPlayer().getUserName());
         gameplayerInfos.put("Ships", getShipsInfo(currentGP));
         gameplayerInfos.put("Salvos", getSalvosInfo(currentGP));
-        //gameplayerInfos.put("Hits", getHitsInfo(currentGP));
+        gameplayerInfos.put("Hits", getHitsInfo(currentGP));
         gameplayerInfos.put("Enemy", getEnemyInfo(currentGP));
+        gameplayerInfos.put("IsItYourTurn",getTurn(currentGP));
+        gameplayerInfos.put("GameStatus",getGameStatus(currentGP));
         gamesviewList.add(gameplayerInfos);
         ;
         return gamesviewList;
 
     }
+
+    public String getGameStatus(GamePlayer gamePlayer){
+        String status = "";
+        List<String> HitList = new ArrayList<>();
+        List<String> eShipLocalList = new ArrayList<>();
+        List<String> eHitList = new ArrayList<>();
+        List<String> ShipLocalList = new ArrayList<>();
+        gamePlayer.getOpponent(gamePlayer).getShip().forEach(shiped -> {
+            shiped.getLocations().forEach( shLoc -> {
+                eShipLocalList.add(shLoc);
+            });
+        });
+        gamePlayer.getShip().forEach(shipeds -> {
+            shipeds.getLocations().forEach( shipLoc -> {
+                ShipLocalList.add(shipLoc);
+            });
+        });
+
+        gamePlayer.getSalvos().forEach( salved -> {
+            if(eShipLocalList.contains(salved.getSalvolocations())){
+                HitList.add(salved.getSalvolocations());
+            }
+        });
+        gamePlayer.getOpponent(gamePlayer).getSalvos().forEach( salveded -> {
+            if(ShipLocalList.contains(salveded.getSalvolocations())){
+                eHitList.add(salveded.getSalvolocations());
+            }
+        });
+        if (14 == HitList.size() && eShipLocalList.size() == ShipLocalList.size()){
+            status = "win";
+        }else if(14 == eHitList.size() && eShipLocalList.size() == ShipLocalList.size()) {
+            status = "lose";
+        }else if(14 == HitList.size() && 14 == eHitList.size() && eShipLocalList.size() == ShipLocalList.size()){
+            status = "tie";
+        }else {
+            status = "ongoing";
+        }
+        return status;
+    }
+
+
+    public List<String> getHitsInfo(GamePlayer gamePlayer){
+        List<String> HitsList = new ArrayList<>();
+        List<String> ShipLocaList = new ArrayList<>();
+        gamePlayer.getOpponent(gamePlayer).getShip().forEach(shiped -> {
+            shiped.getLocations().forEach( shiLoc -> {
+                ShipLocaList.add(shiLoc);
+            });
+
+        });
+        gamePlayer.getSalvos().forEach( salved -> {
+
+            System.out.println(salved.getSalvolocations());
+
+            if(ShipLocaList.contains(salved.getSalvolocations())){
+                HitsList.add(salved.getSalvolocations());
+            }
+
+        });
+        System.out.println(HitsList);
+        return HitsList;
+    }
+
+    public Boolean getTurn( GamePlayer gamePlayer){
+
+        List<Object> YourTurnList = new ArrayList<>();
+        List<Object> EnemyTurnList = new ArrayList<>();
+        Boolean IsItYourTurn = false;
+        gamePlayer.getOpponent(gamePlayer).getSalvos().forEach(salv -> {
+            EnemyTurnList.add(salv.getTurnNumber());
+        });
+        gamePlayer.getSalvos().forEach(sal -> {
+            YourTurnList.add(sal.getTurnNumber());
+        });
+        if(EnemyTurnList.size() == YourTurnList.size() || EnemyTurnList.size() == YourTurnList.size() + 1){
+            IsItYourTurn = true;
+        }
+        return IsItYourTurn;
+    }
+
 
     public List<Object> getEnemyInfo( GamePlayer gamePlayer){
         List<Object> EnemyInfosList = new ArrayList<>();
@@ -304,7 +387,6 @@ public class SalvoController {
         public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, Authentication authentication, @RequestBody List<Ship> ships) {
             Player loggedinplayer = repoP.findByUserName(authentication.getName());
             GamePlayer currentgameP = repoGP.findByGamePlayerId(gamePlayerID);
-            System.out.println(ships);
             if (loggedinplayer == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }else if(currentgameP.getPlayer() != loggedinplayer){
@@ -329,7 +411,6 @@ public class SalvoController {
     public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, Authentication authentication, @RequestBody Salvo  salvo) {
         Player loggedplayer = repoP.findByUserName(authentication.getName());
         GamePlayer currentgamePl = repoGP.findByGamePlayerId(gamePlayerID);
-        System.out.println(salvo);
         if (loggedplayer == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else if(currentgamePl.getPlayer() != loggedplayer){
@@ -338,6 +419,24 @@ public class SalvoController {
                 currentgamePl.addSalvo(salvo);
                 repoGP.save(currentgamePl);
                 repoSa.save(salvo);
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+    }
+
+    @RequestMapping(path = "/games/players/{gamePlayerID}/{gameID}/scores", method = RequestMethod.POST)
+    public ResponseEntity<Object> getShips(@PathVariable long gamePlayerID, @PathVariable long gameID, Authentication authentication, @RequestBody Score  score) {
+        Player loggedplayer = repoP.findByUserName(authentication.getName());
+        GamePlayer currentgPl = repoGP.findByGamePlayerId(gamePlayerID);
+        Game currentGame = repo.findByGameId(gameID);
+        if (loggedplayer == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else if(currentgPl.getPlayer() != loggedplayer){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else {
+            currentGame.addScore(score);
+            repo.save(currentGame);
+            repoSc.save(score);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

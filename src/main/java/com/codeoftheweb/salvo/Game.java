@@ -30,6 +30,10 @@ public class Game {
     public Game(Date date) {
         this.date = date;
     }
+    public void addScore(Score score){
+        score.setGame(this);
+        scores.add(score);
+    }
 
     public Date getDate() {
         return date;

@@ -34,7 +34,7 @@ getgamesData()
         let newdiv = document.createElement("div")
         gamesid.appendChild(newdiv)
 
-        for (let i = 0; data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             if (data[i].Gameplayers.PlayerName1 == data[i].currentLoginUserName || data[i].Gameplayers.PlayerName2 == data[i].currentLoginUserName) {
                 let gamediv = document.createElement("div")
                 gamediv.setAttribute("class", "gamediv")
@@ -47,12 +47,15 @@ getgamesData()
                     link.setAttribute("class", "stylelink")
                     link.innerHTML = "Rejoin"
                     gamediv.appendChild(link)
+                    console.log("bist du hier")
                     if (data[i].currentLoginUserName == data[i].Gameplayers.PlayerName1) {
                         let gameplayerid = data[i].Gameplayers.GamePlayer_Id1
-                        link.addEventListener("click", rejoinGame(gameplayerid))
+                        console.log(gameplayerid)
+                        link.addEventListener("click", () => rejoinGame(gameplayerid))
                     } else {
                         let gameplayerid = data[i].Gameplayers.GamePlayer_Id2
-                        link.addEventListener("click", rejoinGame(gameplayerid))
+                        console.log(gameplayerid)
+                        link.addEventListener("click", () => rejoinGame(gameplayerid))
                     }
 
                 }

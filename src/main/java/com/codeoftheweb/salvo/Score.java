@@ -14,6 +14,10 @@ public class Score {
     private long ScoreID;
     private int actualscore = 0;
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
     private Game game;

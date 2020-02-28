@@ -162,3 +162,7 @@ footer {
 .shooting {
     background-color: green;
 }
+
+.hitted {
+    background-color: orange;
+}

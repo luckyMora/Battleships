@@ -24,9 +24,15 @@ public class Salvo {
 
     public Salvo (){}
 
+
+
     public Salvo(int tn, String local ){
         turnNumber = tn;
         this.salvolocations = local;
+    }
+
+    public void setSalvolocations(String salvolocations) {
+        this.salvolocations = salvolocations;
     }
 
     public long getSalvoID() {
