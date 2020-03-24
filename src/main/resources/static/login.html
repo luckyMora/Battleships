@@ -20,16 +20,14 @@
             <li><a href="ranking.html">Rankings</a></li>
         </div>
     </nav>
-    <div>
-        <p>test</p>
 
-    </div>
-    <div>
-        <form id="login-form">
-            <label>Username: <input id="Username" type="text" name="userName"></label>
-            <label>Password: <input id="password" type="text" name="password"></label>
 
-        </form><button onclick="fetchLogin()">Log in</button>
+    <div id="login">
+        <h1>Log in</h1>
+        <form><label>Username: <input id="Username" type="text" name="userName"></label></form>
+        <form><label>Password: <input id="password" type="text" name="password"></label></form>
+
+        <button onclick="fetchLogin()">Log in</button>
 
         <form id="logout-form" onsubmit="return false">
 
@@ -40,8 +38,9 @@
         </form><a href="register.html"><button>Not A Member?</button></a>
     </div>
 
+    <footer>Lucky Games Enterprice (c)</footer>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="login.js"></script>
 </body>
-<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-<script src="login.js"></script>
 
 </html>

@@ -1,6 +1,5 @@
 var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
 var urlencoded = new URLSearchParams();
 
 var requestOptions = {
@@ -10,30 +9,25 @@ var requestOptions = {
     },
     //body: urlencoded,
     //redirect: 'follow'
-
 };
 
 
 
 async function getgamesData() {
-
     let response = await fetch(`http://localhost:8080/api/games`, requestOptions);
     console.log(response);
     let data = await response.json()
     console.log(data)
     return data;
-
-
 }
 
 getgamesData()
     .then(data => {
-
         console.log(data);
         let gamesid = document.getElementById("games")
         let newdiv = document.createElement("div")
+        newdiv.setAttribute("class", "newdiv")
         gamesid.appendChild(newdiv)
-
         for (let i = 0; i < data.length; i++) {
             if (data[i].Gameplayers.PlayerName1 == data[i].currentLoginUserName || data[i].Gameplayers.PlayerName2 == data[i].currentLoginUserName) {
                 let gamediv = document.createElement("div")
@@ -57,21 +51,17 @@ getgamesData()
                         console.log(gameplayerid)
                         link.addEventListener("click", () => rejoinGame(gameplayerid))
                     }
-
                 }
                 let creationdate = document.createElement("p")
                 creationdate.innerHTML = data[i].created
-
                 newdiv.appendChild(gamediv)
                 gamediv.appendChild(gameNo)
                 gamediv.appendChild(players)
-
                 gamediv.appendChild(creationdate)
             }
         }
     })
     .catch(error => console.log(error));
-
 
 function rejoinGame(gameplayerid) {
     window.open("http://localhost:8080/games.html?gp=" + gameplayerid);

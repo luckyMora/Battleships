@@ -1,7 +1,15 @@
 body {
     /* min-height: 100vh;
     min-width: 100vw; */
-    background-color: rgb(14, 163, 226);
+    /*background-color: rgb(14, 163, 226);*/
+    background-image: url(/BFotos/World-of-Warships-sea-battleship_2560x1440.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    /* width: auto;
+    height: 100%; */
+    background-size: cover;
+    color: rgb(0, 255, 234);
 }
 
 nav {
@@ -63,6 +71,7 @@ h1 {
 
 h2 {
     text-align: center;
+    margin-bottom: 30;
 }
 
 #roundcounter {
@@ -74,7 +83,9 @@ h2 {
     display: flex;
     justify-content: space-around;
     flex-direction: row;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+    margin-left: 15%;
+    margin-right: 15%;
 }
 
 
@@ -94,24 +105,30 @@ table {
     display: flex;
     justify-content: space-around;
     flex-direction: row;
-
-
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 20px;
 }
 
 footer {
-
     display: flex;
     justify-content: center;
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: rgb(14, 163, 226);
     text-align: center;
+    position: fixed;
+    margin-bottom: 10px;
 }
 
 #tableid {
-    display: flex;
+    display: block;
     text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: black;
+
+
 }
 
 #submarine,
@@ -165,4 +182,80 @@ footer {
 
 .hitted {
     background-color: orange;
+}
+
+#login,
+#login-form {
+    text-align: center;
+    background-color: black;
+    justify-content: center;
+    margin-left: 40%;
+    margin-right: 40%;
+    margin-top: 80px;
+    padding-bottom: 30px;
+    padding-top: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
+    color: rgb(161, 252, 252);
+}
+
+
+form {
+    padding: 10px;
+}
+
+button {
+    color: black;
+    background-color: rgb(161, 252, 252);
+    border-radius: 12px;
+}
+
+#hometitle {
+    margin-top: 70px;
+    margin-bottom: 50px;
+}
+
+#login-form {
+    margin-top: 80px;
+}
+
+label {
+    border-top: 5px;
+    border-bottom: 5px;
+}
+
+#playbtn {
+    margin-left: 49%;
+    margin-right: 49%;
+    margin-bottom: 30px;
+
+}
+
+#games {
+    margin: 20px;
+
+}
+
+.newdiv {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-evenly; */
+    flex-direction: row;
+}
+
+.gamediv {
+    text-align: center;
+    margin: 10px;
+    background-color: black;
+    padding: 10px;
+    border-radius: 12px;
+    border-width: 2px;
+    height: 140px;
+    width: 170px;
+    border-color: rgb(161, 252, 252);
+
+}
+
+#ShipBtn {
+    margin-left: 15%;
 }

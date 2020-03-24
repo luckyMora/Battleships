@@ -7,6 +7,7 @@ console.log("myParam", param);
 let Shipsarray = [];
 let yourTurn = true
 let ongoing = ""
+let occupiedShipLoc = [];
 
 async function getData() {
     let response = await fetch(`http://localhost:8080/api/game_view/${param}`);
@@ -124,10 +125,14 @@ function onDrop(event) {
 function positionShips(länge, a, b, cid, sid) {
     let checked1 = document.querySelectorAll("input[type=checkbox]:checked");
     let array = [];
+    let locationarray1 = [];
+    let locationarray2 = [];
+    let IDzahl = 0;
     let completeShip = {
         type: sid,
         locations: [cid]
     };
+
     for (let j = 0; j < checked1.length; j++) {
         array.push(checked1[j].name);
     }
@@ -141,9 +146,10 @@ function positionShips(länge, a, b, cid, sid) {
             for (let i = 0; i < ShipLength; i++) {
                 m--;
                 let zahl2 = m.toString();
-                let IDzahl = zahl2 + zahl;
-                document.getElementById(IDzahl).className = "filled";
-                completeShip.locations.push(IDzahl);
+                IDzahl = zahl2 + zahl;
+                locationarray1.push(IDzahl);
+                // document.getElementById(IDzahl).className = "filled";
+                // completeShip.locations.push(IDzahl);
             }
         } else {
             let ShipLength = länge;
@@ -153,9 +159,10 @@ function positionShips(länge, a, b, cid, sid) {
             for (let i = 0; i < ShipLength; i++) {
                 m++;
                 let zahl2 = m.toString();
-                let IDzahl = zahl2 + zahl;
-                document.getElementById(IDzahl).className = "filled";
-                completeShip.locations.push(IDzahl);
+                IDzahl = zahl2 + zahl;
+                locationarray1.push(IDzahl);
+                // document.getElementById(IDzahl).className = "filled";
+                // completeShip.locations.push(IDzahl);
             }
         }
     } else {
@@ -167,9 +174,11 @@ function positionShips(länge, a, b, cid, sid) {
             for (let i = 0; i < ShipLength; i++) {
                 m--;
                 let zahl2 = m.toString();
-                let IDzahl = zahl1 + zahl2;
-                document.getElementById(IDzahl).className = "filled";
-                completeShip.locations.push(IDzahl);
+                IDzahl = zahl1 + zahl2;
+                locationarray1.push(IDzahl);
+                console.log(locationarray1)
+                // document.getElementById(IDzahl).className = "filled";
+                // completeShip.locations.push(IDzahl);
             }
         } else {
             let ShipLength = länge;
@@ -179,11 +188,39 @@ function positionShips(länge, a, b, cid, sid) {
             for (let i = 0; i < ShipLength; i++) {
                 m++;
                 let zahl2 = m.toString();
-                let IDzahl = zahl1 + zahl2;
-                document.getElementById(IDzahl).className = "filled";
-                completeShip.locations.push(IDzahl);
+                IDzahl = zahl1 + zahl2;
+                locationarray1.push(IDzahl);
+                console.log(locationarray1)
+                // document.getElementById(IDzahl).className = "filled";
+                // completeShip.locations.push(IDzahl);
             }
         }
+    }
+    console.log("na")
+    console.log(array)
+    console.log("nana")
+    console.log(Shipsarray)
+    console.log("nanana")
+    console.log(completeShip.locations)
+    console.log("nananana")
+    console.log(occupiedShipLoc)
+    for (let i = 0; i < locationarray1.length; i++) {
+        if (occupiedShipLoc.includes(locationarray1[i])) {
+            document.getElementById(cid).className = "empty";
+        } else {
+            locationarray2.push(locationarray1[i])
+        }
+    }
+    if (locationarray2.length == locationarray1.length && locationarray2 !== 0) {
+        occupiedShipLoc.push(cid)
+        for (let i = 0; i < locationarray1.length; i++) {
+            document.getElementById(locationarray2[i]).className = "filled";
+            completeShip.locations.push(locationarray2[i]);
+            occupiedShipLoc.push(locationarray2[i])
+        }
+    } else {
+        let removeShip = document.getElementById(sid);
+        removeShip.classList.remove = "invisible"
     }
     Shipsarray.push(completeShip);
     console.log(Shipsarray);
@@ -207,6 +244,7 @@ function onDragOver(event) {
 
 document.getElementById("resetAllbutton").addEventListener("click", () => {
     Shipsarray = [];
+    occupiedShipLoc = [];
     let blacktdlist = document
         .getElementById("mytable")
         .querySelectorAll("td[class=filled]");
